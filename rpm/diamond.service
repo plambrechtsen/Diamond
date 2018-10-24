@@ -1,0 +1,65 @@
+#! /bin/sh
+#
+# System startup script for the Diamond daemon
+#
+### BEGIN INIT INFO
+# Provides: diamond
+# Required-Start: $syslog
+# Should-Start:
+# Required-Stop:  $syslog
+# Should-Stop:
+# Default-Start:  2 3 5
+# Default-Stop:   0 1 6
+# Short-Description: Start the Diamond daemon
+# Description:    Start the Diamond daemon
+### END INIT INFO
+
+PROC=/usr/bin/diamond
+test -x $PROC || exit 5
+
+PROC_CONFIG=/etc/diamond/diamond.conf
+test -f $PROC_CONFIG || exit 6
+
+# Source SuSE config
+. /etc/rc.status
+
+rc_reset
+case "$1" in
+    start)
+        echo -n "Starting Diamond daemon"
+        startproc -f $PROC
+        rc_status -v
+        ;;
+    stop)
+        echo -n "Shutting down Diamon daemon"
+        killproc -TERM $PROC
+        rc_status -v
+        ;;
+    try-restart)
+        $0 status >/dev/null && $0 restart
+        rc_status
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        rc_status
+        ;;
+    force-reload)
+        $0 try-restart
+        rc_status
+        ;;
+    reload)
+        $0 try-restart
+        rc_status
+        ;;
+    status)
+        echo -n "Checking for Diamond service"
+        checkproc $PROC
+        rc_status -v
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status|try-restart|restart|force-reload|reload}"
+        exit 1
+        ;;
+esac
+rc_exit

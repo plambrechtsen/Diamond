@@ -1,0 +1,11 @@
+--- src/collectors/jcollectd/collectd_network.py	2018-10-24 18:37:37.000000000 +1300
++++ src/collectors/jcollectd/collectd_network.py	2018-10-24 22:01:33.000000000 +1300
+@@ -30,7 +30,7 @@
+ from datetime import datetime
+ from copy import deepcopy
+ 
+-if sys.version_info.major == 2:
++if sys.version_info == 2:
+     # Python 2.7 io.StringIO does not like unicode
+     from StringIO import StringIO
+ else:
